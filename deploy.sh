@@ -17,19 +17,13 @@ if ! command -v azd &> /dev/null; then
     exit 1
 fi
 
-if ! command -v docker &> /dev/null; then
-    echo "❌ Docker is not installed"
-    echo "Please install from: https://docs.docker.com/desktop/"
-    exit 1
-fi
-
 if ! command -v az &> /dev/null; then
     echo "❌ Azure CLI is not installed"
     echo "Please install from: https://docs.microsoft.com/cli/azure/install-azure-cli"
     exit 1
 fi
 
-echo "✅ All prerequisites are installed"
+echo "✅ All prerequisites are installed (No Docker Desktop needed!)"
 
 # Set default environment variables
 echo "🔧 Setting up environment..."

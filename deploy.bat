@@ -17,13 +17,6 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-where docker >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ❌ Docker is not installed
-    echo Please install from: https://docs.docker.com/desktop/
-    exit /b 1
-)
-
 where az >nul 2>&1
 if %errorlevel% neq 0 (
     echo ❌ Azure CLI is not installed
@@ -31,7 +24,7 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo ✅ All prerequisites are installed
+echo ✅ All prerequisites are installed ^(No Docker Desktop needed!^)
 echo.
 
 REM Set default environment variables

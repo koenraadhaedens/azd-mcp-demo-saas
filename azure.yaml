@@ -16,9 +16,6 @@ services:
     project: ./src
     language: python
     host: containerapp
-    docker:
-      path: ./Dockerfile
-      context: .
 
 hooks:
   preprovision:
@@ -34,17 +31,14 @@ hooks:
   predeploy:
     shell: pwsh
     run: |
-      Write-Host "Building and pushing container image..."
+      Write-Host "Building container image using Azure Container Registry..." -ForegroundColor Green
+      
       # Get infrastructure outputs
       $outputs = azd env get-values --output json | ConvertFrom-Json
       $acrName = $outputs.AZURE_CONTAINER_REGISTRY_NAME
-      $resourceGroup = $outputs.AZURE_RESOURCE_GROUP_NAME
+      $imageName = "fake-saas-api:$($env:AZURE_ENV_NAME)"
       
-      # Build and push image to ACR
-      $imageName = "${acrName}.azurecr.io/fake-saas-api:$($env:AZURE_ENV_NAME)"
+      Write-Host "Building image: $imageName in ACR: $acrName" -ForegroundColor Cyan
       
-      Write-Host "Building image: $imageName"
-      docker build -t $imageName .
-      
-      Write-Host "Pushing to ACR: $acrName"
-      az acr build --registry $acrName --image fake-saas-api:$($env:AZURE_ENV_NAME) .
+      # Build image directly in ACR (no local Docker needed!)
+      az acr build --registry $acrName --image $imageName --file Dockerfile .

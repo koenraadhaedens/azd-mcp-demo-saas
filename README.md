@@ -6,8 +6,8 @@ A complete Azure Developer CLI (azd) template for deploying a Python FastAPI "Fa
 
 1. **Prerequisites**
    - [Azure Developer CLI (azd)](https://docs.microsoft.com/azure/developer/azure-developer-cli/)
-   - [Docker Desktop](https://docs.docker.com/desktop/)
    - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
+   - **No Docker Desktop required!** (Uses Azure Container Registry Build)
 
 2. **Deploy the Application**
    ```bash
@@ -113,7 +113,7 @@ When you run `azd up`, here's what happens:
 
 1. **Pre-provision Hook**: Sets default DEMO_API_KEY if not provided
 2. **Infrastructure Provision**: Deploys all Azure resources using Bicep
-3. **Pre-deploy Hook**: Builds and pushes container image to ACR
+3. **Pre-deploy Hook**: Builds container image directly in Azure Container Registry (no local Docker needed!)
 4. **Application Deploy**: Updates Container App with new image
 
 ---
