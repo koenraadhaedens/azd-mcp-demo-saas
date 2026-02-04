@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: fake-saas-demo
+metadata:
+  template: fake-saas-demo@0.0.1-beta
+  description: A Python FastAPI SaaS demo application deployed to Azure Container Apps
+
+workflow:
+  # Automatically provision and deploy on azd up
+  up:
+    - azd provision
+    - azd deploy
+
+services:
+  api:
+    project: ./src
+    language: python
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      context: .
+
+hooks:
+  preprovision:
+    shell: pwsh
+    run: |
+      Write-Host "Setting up environment variables..."
+      # Ensure DEMO_API_KEY is set
+      $apiKey = azd env get-value DEMO_API_KEY
+      if ([string]::IsNullOrEmpty($apiKey)) {
+        Write-Host "Setting default DEMO_API_KEY..."
+        azd env set DEMO_API_KEY "demo-key-12345"
+      }
+  predeploy:
+    shell: pwsh
+    run: |
+      Write-Host "Building and pushing container image..."
+      # Get infrastructure outputs
+      $outputs = azd env get-values --output json | ConvertFrom-Json
+      $acrName = $outputs.AZURE_CONTAINER_REGISTRY_NAME
+      $resourceGroup = $outputs.AZURE_RESOURCE_GROUP_NAME
+      
+      # Build and push image to ACR
+      $imageName = "${acrName}.azurecr.io/fake-saas-api:$($env:AZURE_ENV_NAME)"
+      
+      Write-Host "Building image: $imageName"
+      docker build -t $imageName .
+      
+      Write-Host "Pushing to ACR: $acrName"
+      az acr build --registry $acrName --image fake-saas-api:$($env:AZURE_ENV_NAME) .

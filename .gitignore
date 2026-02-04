@@ -1,0 +1,51 @@
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+
+# Azure
+.azure/
+*.azd/
+
+# Docker
+.dockerignore
+.docker/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+*~
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+
+# Test coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.temp
